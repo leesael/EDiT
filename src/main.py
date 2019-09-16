@@ -24,12 +24,6 @@ def set_seeds(seed):
     torch.cuda.manual_seed(seed)
 
 
-def remove_if_exists(path):
-    os.makedirs(os.path.dirname(path), exist_ok=True)
-    if os.path.exists(path):
-        os.remove(path)
-
-
 def get_valid_datasets():
     with open('../datasets.txt') as f:
         return [e.strip() for e in f.readlines()]
@@ -64,6 +58,10 @@ def train(model, loaders, l1reg, pruning, logs):
     epochs = 500
     val_epochs = 40
     optimizer = optim.Adam(model.parameters(), lr)
+
+    with open(logs, 'w') as f:
+        f.write('epoch\ttrn_loss\ttrn_acc\tval_loss\tval_acc\t'
+                'test_loss\ttest_acc\tparams\tis_best\n')
 
     best_epoch, best_loss = -1, 1e10
     saved_model = None
@@ -100,12 +98,10 @@ def train(model, loaders, l1reg, pruning, logs):
 
         with open(logs, 'a') as f:
             result = (trn_loss, trn_acc, val_loss, val_acc, test_loss, test_acc)
-            f.write('{:3d}\t'.format(epoch))
+            is_best = 'BEST' if epoch == best_epoch else '-'
+            f.write(f'{epoch:5d}\t')
             f.write('\t'.join('{:.4f}' for _ in range(len(result))).format(*result))
-            f.write('\t{}'.format(size))
-            if epoch == best_epoch:
-                f.write('\tBEST')
-            f.write('\n')
+            f.write(f'\t{size}\t{is_best}\n')
 
     saved_model.seek(0)
     model.load_state_dict(torch.load(saved_model))
