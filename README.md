@@ -1,6 +1,6 @@
 # EDiT
 
-This project is a PyTorch implementation of EDiT: Interpreting Ensemble Models via Compact Soft Decision Trees, published as a conference proceeding at [ICDM 2019](http://icdm2019.bigke.org/).
+This project is a PyTorch implementation of [EDiT: Interpreting Ensemble Models via Compact Soft Decision Trees](docs/YooS19.pdf), published as a conference proceeding at [ICDM 2019](http://icdm2019.bigke.org/).
 This paper proposes a novel approach that distills the knowledge of an ensemble model to maximize the interpretability of soft decision trees (SDT) with fewer parameters.
 
 ## Prerequisites
@@ -28,6 +28,8 @@ The trained RF models are saved in `out/rf/models`.
 The other results such as intermediate logs of training and trained compact soft decision trees are saved in `out/edit`.
 
 ## References
+
+You can download [this bib file](docs/YooS19.bib) or copy the following information: 
 
 ```
 @inproceedings{YooS19,
