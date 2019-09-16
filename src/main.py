@@ -59,9 +59,10 @@ def train(model, loaders, l1reg, pruning, logs):
     val_epochs = 40
     optimizer = optim.Adam(model.parameters(), lr)
 
-    with open(logs, 'w') as f:
-        f.write('epoch\ttrn_loss\ttrn_acc\tval_loss\tval_acc\t'
-                'test_loss\ttest_acc\tparams\tis_best\n')
+    if not os.path.exists(logs):
+        with open(logs, 'w') as f:
+            f.write('epoch\ttrn_loss\ttrn_acc\tval_loss\tval_acc\tparams\t'
+                    'is_best\n')
 
     best_epoch, best_loss = -1, 1e10
     saved_model = None
@@ -82,7 +83,6 @@ def train(model, loaders, l1reg, pruning, logs):
 
         trn_loss, trn_acc = evaluate(model, loaders[0], l1reg)
         val_loss, val_acc = evaluate(model, loaders[1], l1reg)
-        test_loss, test_acc = evaluate(model, loaders[2], l1reg)
         size = model.size()
 
         if pruning > 0:
@@ -97,11 +97,11 @@ def train(model, loaders, l1reg, pruning, logs):
             break
 
         with open(logs, 'a') as f:
-            result = (trn_loss, trn_acc, val_loss, val_acc, test_loss, test_acc)
             is_best = 'BEST' if epoch == best_epoch else '-'
-            f.write(f'{epoch:5d}\t')
-            f.write('\t'.join('{:.4f}' for _ in range(len(result))).format(*result))
-            f.write(f'\t{size}\t{is_best}\n')
+            f.write(f'{epoch}\t')
+            f.write(f'{trn_loss:.4f}\t{trn_acc:.4f}\t')
+            f.write(f'{val_loss:.4f}\t{val_acc:.4f}\t')
+            f.write(f'{size}\t{is_best}\n')
 
     saved_model.seek(0)
     model.load_state_dict(torch.load(saved_model))
@@ -120,7 +120,7 @@ def main():
 
     distill = False  # True in the paper
     tying_ratio = 1.0  # 0.5 in the paper
-    pruning_ratio = 1.0  # 0.5 in the paper
+    pruning_ratio = 0.5  # 0.5 in the paper
     lambda_l1reg = 0  # No optimal values
     tree_threshold = 0  # 1e-4 in paper
 
@@ -132,6 +132,13 @@ def main():
     set_seeds(seed)
 
     data_dict = data.read_data(data_path, dataset, validation=True)
+
+    model = SoftDecisionTree(
+        in_features=data_dict['nx'],
+        out_classes=data_dict['ny'],
+        depth=depth,
+        tying=tying_ratio)
+    model = model.to(DEVICE)
 
     if distill:
         rf_path = '../out/rf/models/{}.pkl'.format(dataset)
@@ -147,28 +154,26 @@ def main():
     trn_y = data_dict['trn_y']
     val_x = data_dict['val_x']
     val_y = data_dict['val_y']
-    test_x = data_dict['test_x']
-    test_y = data_dict['test_y']
 
-    t_loader = data.to_loader(trn_x, trn_y, batch_size, shuffle=True)
-    v_loader = data.to_loader(val_x, val_y, batch_size)
-    s_loader = data.to_loader(test_x, test_y, batch_size)
-    loaders = (t_loader, v_loader, s_loader)
-
-    model = SoftDecisionTree(
-        in_features=data_dict['nx'],
-        out_classes=data_dict['ny'],
-        depth=depth,
-        tying=tying_ratio)
-    model = model.to(DEVICE)
+    trn_loader = data.to_loader(trn_x, trn_y, batch_size, shuffle=True)
+    val_loader = data.to_loader(val_x, val_y, batch_size)
+    loaders = (trn_loader, val_loader)
 
     train(model, loaders, lambda_l1reg, tree_threshold, log_path)
     if pruning_ratio < 1:
         model.prune_weights(ratio=pruning_ratio)
         train(model, loaders, lambda_l1reg, tree_threshold, log_path)
 
+    test_x = data_dict['test_x']
+    test_y = data_dict['test_y']
+    test_loader = data.to_loader(test_x, test_y, batch_size)
+
     os.makedirs(os.path.dirname(model_path), exist_ok=True)
     torch.save(model.state_dict(), model_path)
+    loss, acc = evaluate(model, test_loader, lambda_l1reg)
+    print(f'Test loss: {loss:.4f}')
+    print(f'Test accuracy: {acc:.4f}')
+    print(f'Number of parameters {model.size()}')
 
 
 if __name__ == '__main__':

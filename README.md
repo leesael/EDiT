@@ -21,8 +21,9 @@ The list of target datasets is described in `datasets.txt`.
 
 Then, move to `src/` and run `python main.py` to actually run EDiT.
 Currently it trains a vanilla SDT over the `abalone` dataset, but you can change easily the hyperparameters in `src/main.py` including the dataset, sparsification technique, and training procedure.
-Still, you need pretrained random forest (RF) models to use knowledge distillation for enhancing the performances of resulting models.
-You should run `python rf.py` to train and save RF models.
+Still, you need pre-trained random forest (RF) models to use knowledge distillation for enhancing the performances of resulting models.
+In that case, you should run `python rf.py` to train and save RF models.
+The resulting files are saved in `out/`, including the intermediate logs of training and trained models. 
 
 ## References
 
