@@ -21,9 +21,11 @@ The list of target datasets is described in `datasets.txt`.
 
 Then, move to `src/` and run `python main.py` to actually run EDiT.
 Currently it trains a vanilla SDT over the `abalone` dataset, but you can change easily the hyperparameters in `src/main.py` including the dataset, sparsification technique, and training procedure.
-Still, you need pre-trained random forest (RF) models to use knowledge distillation for enhancing the performances of resulting models.
-In that case, you should run `python rf.py` to train and save RF models.
-The resulting files are saved in `out/`, including the intermediate logs of training and trained models. 
+For instance, it will use the tree pruning technique if you change `tree_threshold` from `0` to a desired threshold such as `1e-4`.
+
+If you want to enable the knowledge distillation technique, you should run `python rf.py` to train and save random forests (RF) which are not included in this repository.
+The trained RF models are saved in `out/rf/models`.
+The other results such as intermediate logs of training and trained compact soft decision trees are saved in `out/edit`.
 
 ## References
 
