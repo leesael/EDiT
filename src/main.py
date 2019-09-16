@@ -120,7 +120,7 @@ def main():
 
     distill = False  # True in the paper
     tying_ratio = 1.0  # 0.5 in the paper
-    pruning_ratio = 0.5  # 0.5 in the paper
+    pruning_ratio = 1.0  # 0.5 in the paper
     lambda_l1reg = 0  # No optimal values
     tree_threshold = 0  # 1e-4 in paper
 
