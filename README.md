@@ -14,14 +14,15 @@ This paper proposes a novel approach that distills the knowledge of an ensemble 
 
 ## Usage
 
-You should first download the dataset from [this website](http://persoal.citius.usc.es/manuel.fernandez.delgado/papers/jmlr/) and place the directory as `/data`.
-Then, move to `/src` and run `main.py` to run EDiT.
-Currently it trains a vanilla SDT over the `abalone` dataset, but you can change easily the hyperparameters in `main.py` including the dataset, sparsification technique, and training procedure.
-```
-python main.py
-```
+You should first download the datasets from [this website](http://persoal.citius.usc.es/manuel.fernandez.delgado/papers/jmlr/) and place them in `/data`.
+You may just run `down.sh` in `/data` in a Linux environment.
+Although it contains over a hundred datasets which were used in previous works, we use only 8 of them in our work.
+The list of target datasets is described in `src/main.py`.
 
-You need, however, pretrained random forest (RF) models to use the knowledge distillation.
+Then, move to `/src` and run `python main.py` to actually run EDiT.
+Currently it trains a vanilla SDT over the `abalone` dataset, but you can change easily the hyperparameters in `main.py` including the dataset, sparsification technique, and training procedure.
+Still, you need pretrained random forest (RF) models to use knowledge distillation for enhancing the performances of resulting models.
+You should run `python rf.py` to train and save RF models.
 
 ## References
 
