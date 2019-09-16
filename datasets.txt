@@ -1,0 +1,8 @@
+abalone
+magic
+musk-2
+oocytes_trisopterus_states_5b
+pendigits
+statlog-australian-credit
+twonorm
+waveform

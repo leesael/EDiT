@@ -30,6 +30,11 @@ def remove_if_exists(path):
         os.remove(path)
 
 
+def get_valid_datasets():
+    with open('../datasets.txt') as f:
+        return [e.strip() for e in f.readlines()]
+
+
 def evaluate(model, loader, l1reg=0) -> tuple:
     model.eval()
 
@@ -108,6 +113,8 @@ def train(model, loaders, l1reg, pruning, logs):
 
 def main():
     dataset = 'abalone'
+    assert dataset in get_valid_datasets()
+
     depth = 8
     batch_size = 128
     seed = 2019
