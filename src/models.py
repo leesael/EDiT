@@ -18,7 +18,7 @@ class Layer(nn.Module):
         super().__init__()
         out_nodes = count_leaves(depth)
         mask_ones = torch.ones((out_nodes, in_features))
-        mask = torch.bernoulli(mask_ones * (1 - tying_ratio)).byte()
+        mask = torch.bernoulli(mask_ones * (1 - tying_ratio)).bool()
         self.register_buffer('mask', mask)  # self.mask = mask
         self.linear = nn.Linear(in_features, out_nodes)
         self.apply_mask()
@@ -49,7 +49,7 @@ class Layer(nn.Module):
     def size(self):
         mask = self.mask.clone()
         mask[self.linear.weight.abs() < EPSILON] = 1
-        return (1 - mask).sum(dim=1) + 1  # 1 for the bias
+        return (~mask).sum(dim=1) + 1  # 1 for the bias
 
     def l1_loss(self):
         sum1 = self.linear.weight.abs().sum(dim=1)
