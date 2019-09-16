@@ -115,11 +115,11 @@ def main():
     model_path = f'../out/edit/models/{dataset}.pth'
     data_path = '../data'
 
-    distill = True  # base: False
-    tying_ratio = 0.5  # base: 1.0
-    pruning_ratio = 1.0  # base: 1.0
-    lambda_l1reg = 0  # base: 0.0
-    tree_threshold = 1e-4  # base: 0.0
+    distill = False  # True in the paper
+    tying_ratio = 1.0  # 0.5 in the paper
+    pruning_ratio = 1.0  # 0.5 in the paper
+    lambda_l1reg = 0  # No optimal values
+    tree_threshold = 0  # 1e-4 in paper
 
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
     if os.path.exists(log_path):
