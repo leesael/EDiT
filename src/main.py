@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestClassifier
 from torch import optim
 
 import data
-from models import SoftDecisionTree
+from models import CompactSDT
 
 DEVICE = None
 
@@ -133,7 +133,7 @@ def main():
 
     data_dict = data.read_data(data_path, dataset, validation=True)
 
-    model = SoftDecisionTree(
+    model = CompactSDT(
         in_features=data_dict['nx'],
         out_classes=data_dict['ny'],
         depth=depth,

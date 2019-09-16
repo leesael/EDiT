@@ -65,7 +65,7 @@ class Layer(nn.Module):
         self.apply_mask()
 
 
-class SoftDecisionTree(nn.Module):
+class CompactSDT(nn.Module):
     def __init__(self, in_features, out_classes, depth=8, tying=1.0):
         super().__init__()
         self.depth = depth
