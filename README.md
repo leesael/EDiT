@@ -27,7 +27,7 @@ If you want to enable the knowledge distillation technique, you should run `pyth
 The trained RF models are saved in `out/rf/models`.
 The other results such as intermediate logs of training and trained compact soft decision trees are saved in `out/edit`.
 
-## References
+## Reference
 
 You can download [this bib file](docs/YooS19.bib) or copy the following information: 
 
