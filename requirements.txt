@@ -1,5 +1,5 @@
+torch >= 1.2.0
 joblib
 numpy
-torch
 scikit-learn
 pandas

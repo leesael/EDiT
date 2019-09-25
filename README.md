@@ -6,7 +6,7 @@ This paper proposes a novel approach that distills the knowledge of an ensemble 
 ## Prerequisites
 
 - Python 3.6+
-- [PyTorch](https://pytorch.org/)
+- [PyTorch](https://pytorch.org/) 1.2.0+
 - [NumPy](https://numpy.org)
 - [scikit-learn](https://scikit-learn.org/stable/)
 - [joblib](https://joblib.readthedocs.io/en/latest/)
