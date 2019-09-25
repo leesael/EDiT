@@ -49,7 +49,7 @@ class Layer(nn.Module):
     def size(self):
         mask = self.mask.clone()
         mask[self.linear.weight.abs() < EPSILON] = 1
-        return (~mask).sum(dim=1) + 1  # 1 for the bias
+        return (~mask).sum(dim=1) + self.linear.bias.size(0)
 
     def l1_loss(self):
         sum1 = self.linear.weight.abs().sum(dim=1)
